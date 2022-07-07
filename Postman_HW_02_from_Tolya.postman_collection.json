@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "bcaae060-dd0a-4528-ba56-02717176a388",
+		"_postman_id": "21846b5b-fb5e-4512-8747-c2228c3b8910",
 		"name": "Postman_HW_02 from Tolya",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18267742"
 	},
 	"item": [
 		{
@@ -146,47 +147,34 @@
 							"P.S. ЗАДАНИЕ НЕ ПОДРАЗУМЕВАЕТ, ЧТО ЭНДПОИНТ РАБОТАЕТ СОГЛАСНО НАПИСАННЫМ ТРЕБОВАНИЯМ. МЫ УЧИМСЯ ПИСАТЬ ТЕСТЫ НА API!\r",
 							"Требования:\r",
 							"1) Name: 3-40 символов включительно, запрещены префиксные и постфиксные пробелы. Поле обязательное*/\r",
-							"let req_name = \"  awq \"; //pm.environment.get(\"name\")\r",
+							"const name = pm.iterationData.get('name');\r",
+							"const age = pm.iterationData.get('age');\r",
+							"const salary = pm.iterationData.get('salary');\r",
 							"\r",
-							"//меньше 3х символов\r",
-							"if (req_name.length < 3) {\r",
-							"    console.log(\"too few characters in the name\", req_name, req_name.length);\r",
-							"}else{\r",
-							"    console.log(\"Good name\", req_name, req_name.length);\r",
-							"};\r",
-							"pm.test(\"too few characters in the name\", function () {\r",
-							"    pm.response.to.have.status(!200);\r",
-							"});\r",
+							"function nameValid(value) {\r",
+							"    return value && value.length > 2 && value.length < 41 && value.trim() == value\r",
+							"}\r",
 							"\r",
-							"//префиксный пробел\r",
-							"if (req_name.length > 2 && req_name[0] ===\" \") {\r",
-							"    console.log(\"prefix space in the name\", req_name, req_name.length);\r",
-							"}else{\r",
-							"    console.log(\"prefix space\", req_name, req_name.length);\r",
-							"};\r",
-							"pm.test(\"too few characters in the name\", function () {\r",
-							"    pm.response.to.have.status(!200);\r",
-							"});\r",
+							"function ageValid(value) {\r",
+							"    return value && value > 17 && value < 121 && !isNaN(value) && Number.isInteger(+value)\r",
+							"}\r",
 							"\r",
-							"//постфиксный пробел\r",
-							"if (req_name.length < 41 && req_name[39] ===\" \") {\r",
-							"    console.log(\"postfix space in the name\", req_name, req_name.length);\r",
-							"}else{\r",
-							"    console.log(\"postfix space \", req_name, req_name.length);\r",
-							"};\r",
-							"pm.test(\"too few characters in the name\", function () {\r",
-							"    pm.response.to.have.status(!200);\r",
-							"});\r",
+							"function salaryValid(value) {\r",
+							"    return value && value > 0 && value < 1000001 && !isNaN(value) && Number.isInteger(+value)\r",
+							"}\r",
 							"\r",
-							"//больше 40 символов\r",
-							"if (req_name.length > 40) {\r",
-							"    console.log(\"too much characters in the name\", req_name, req_name.length);\r",
+							"function validate(name,age,salary) {\r",
+							"    return nameValid(name) && ageValid(age) && salaryValid(salary)\r",
+							"}\r",
+							"if (validate(name,age,salary)) {\r",
+							"    pm.test(`Satus code 200 with name = ${name}, age == ${age}, salary == ${salary}`, () => {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    })\r",
 							"}else{\r",
-							"    console.log(\"Good name\", req_name, req_name.length);\r",
-							"};\r",
-							"pm.test(\"too few characters in the name\", function () {\r",
-							"    pm.response.to.have.status(!200);\r",
-							"});"
+							"    pm.test(`NOT to have status code 200 with name = ${name}, age == ${age}, salary == ${salary}`, () => {\r",
+							"        pm.response.to.not.have.status(200);\r",
+							"    })\r",
+							"}"
 						],
 						"type": "text/javascript"
 					}
@@ -495,9 +483,9 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.test(\"Status code is 200\", function () {",
-					"    pm.response.to.have.status(200);",
-					"});"
+					"// pm.test(\"Status code is 200\", function () {",
+					"//     pm.response.to.have.status(200);",
+					"// });"
 				]
 			}
 		}
